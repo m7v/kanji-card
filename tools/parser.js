@@ -7,6 +7,12 @@ const page = 1;
 const pageSize = 20;
 const levels = ['jlpt-n5', 'jlpt-n4', 'jlpt-n3'];
 
+const levelMapper = {
+    'jlpt-n5': 'n5',
+    'jlpt-n4': 'n4',
+    'jlpt-n3': 'n3',
+};
+
 const buildPageUrl = (l, p) => `https://jisho.org/search/%23${l}%20%23kanji?page=${p}`;
 
 const parseCountResult = (html) => {
@@ -16,7 +22,7 @@ const parseCountResult = (html) => {
     return list.match(/(\d+)/)[0];
 }
 
-const parseKanji = (html, kanjiList) => {
+const parseKanji = (html, kanjiList, level) => {
     const dom = new JSDOM(html);
 
     const list = dom.window.document.querySelectorAll('.entry.kanji_light.clearfix');
@@ -35,6 +41,9 @@ const parseKanji = (html, kanjiList) => {
             kun: kun ? kun.textContent.trim().replace(/\s+/g, ' ') : '',
             on: on ? on.textContent.trim().replace(/\s+/g, ' ') : '',
             meaning,
+            tags: [
+                levelMapper[level],
+            ]
         });
     });
 
@@ -62,7 +71,7 @@ const extractKanjiByLevel = (level) => {
                             return resolve();
                         }
                         // console.log(`Page ${currentPage} starting parse`);
-                        kanjiList = parseKanji(body, kanjiList);
+                        kanjiList = parseKanji(body, kanjiList, level);
                         // console.log(`Page ${currentPage} finished parse`);
                         // console.log(`Items parsed: ${kanjiList.length}`);
 
