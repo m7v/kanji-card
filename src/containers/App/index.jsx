@@ -6,15 +6,13 @@ import kanjiList from './kanjiList.json';
 import KanjiCard from '../../components/KanjiCard';
 
 export default function App() {
-  console.log('kanjiList', kanjiList);
-
   const classes = useStyles();
 
   return (
-    <Container>
-      <Grid container className={classes.root} spacing={3}>
+    <Container className={classes.padding}>
+      <Grid container className={classes.root} spacing={8}>
         <Grid item xs={12}>
-          <Grid container justify="center" spacing={2}>
+          <Grid container justify="center" spacing={4}>
             {Object.values(kanjiList.items).map(value => (
               <Grid key={value.sign} item>
                 <KanjiCard data={value} />
@@ -28,6 +26,9 @@ export default function App() {
 }
 
 const useStyles = makeStyles(theme => ({
+  padding: {
+    padding: '16px 0',
+  },
   root: {
     flexGrow: 1,
   },
