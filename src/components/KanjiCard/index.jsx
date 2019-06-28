@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(6, 0, 3),
     },
     paper: {
+        cursor: 'pointer',
         height: 300,
         width: 300,
     },
