@@ -2,6 +2,7 @@ import React from 'react';
 import debounce from 'lodash/debounce';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FlipCard from '../FlipCard';
 
@@ -15,12 +16,12 @@ export default function KanjiCard(props) {
     return (
         <div className={classes.paper}>
             <FlipCard isFlipped={isFlipped}>
-                <div className={clsx(classes.main, classes.card)} onClick={showBack}>
+                <Paper className={clsx(classes.main, classes.card)} onClick={showBack}>
                     <Typography variant="h1">
                         {props.data.sign}
                     </Typography>
-                </div>
-                <div className={clsx(classes.other, classes.card)} onClick={showFront}>
+                </Paper>
+                <Paper className={clsx(classes.other, classes.card)} onClick={showFront}>
                     <Typography variant="h2" gutterBottom>
                         {props.data.sign}
                     </Typography>
@@ -35,7 +36,7 @@ export default function KanjiCard(props) {
                             {props.data.meaning}
                         </Typography>
                     </div>
-                </div>
+                </Paper>
             </FlipCard>
         </div>
     );
@@ -47,12 +48,11 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         cursor: 'pointer',
-        height: 300,
-        width: 300,
+        height: 350,
+        width: 250,
     },
     card: {
         borderRadius: 10,
-        boxShadow: '0 3px 10px rgba(0,0,0,.16), 0 3px 10px rgba(0,0,0,.23)',
         padding: theme.spacing(2),
         height: '100%',
         width: '100%',

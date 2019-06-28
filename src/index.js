@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
+import grey from '@material-ui/core/colors/grey';
+import indigo from '@material-ui/core/colors/indigo';
 import * as serviceWorker from './serviceWorker';
 import App from './containers/App';
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            text: grey[500],
+            light: grey[700],
+            main: indigo[50],
+            dark: grey[900],
+        },
+    },
+    typography: {
+        useNextVariants: true,
+    },
+});
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
