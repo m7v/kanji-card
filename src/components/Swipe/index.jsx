@@ -1,5 +1,7 @@
 import React from 'react';
 import Swipeable from 'react-swipy';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import KanjiCard from '../KanjiCard';
 
 export class Swipe extends React.PureComponent {
@@ -21,8 +23,10 @@ export class Swipe extends React.PureComponent {
                             <Swipeable
                                 buttons={({ right, left }) => (
                                     <div style={actionsStyles}>
-                                    <Button onClick={left}>Reject</Button>
-                                        <Button onClick={right}>Accept</Button>
+                                        <ButtonGroup fullWidth color="secondary" aria-label="Outlined primary button group">
+                                            <Button onClick={left}>いいえ</Button>
+                                            <Button onClick={right}>はい</Button>
+                                        </ButtonGroup>
                                     </div>
                                 )}
                                 onAfterSwipe={this.remove}>
@@ -69,20 +73,6 @@ const cardStyles = {
     top: 0
 };
 
-const buttonStyles = {
-    padding: "16px 24px",
-    background: "whitesmoke",
-    cursor: "pointer",
-    border: "none",
-    borderRadius: 3
-};
-
 const Card = ({ zIndex = 0, children }) => (
     <div style={{ ...cardStyles, zIndex }}>{children}</div>
-);
-
-const Button = ({ children, onClick }) => (
-    <button onClick={onClick} style={{ ...buttonStyles }}>
-        {children}
-    </button>
 );
