@@ -19,21 +19,23 @@ export class Swipe extends React.PureComponent {
             <div style={appStyles}>
                 <div style={wrapperStyles}>
                     {cards.length > 0 && (
-                        <div style={wrapperStyles}>
-                            <Swipeable
-                                buttons={({ right, left }) => (
-                                    <div style={actionsStyles}>
-                                        <ButtonGroup fullWidth color="secondary" aria-label="Outlined primary button group">
-                                            <Button onClick={left}>いいえ</Button>
-                                            <Button onClick={right}>はい</Button>
-                                        </ButtonGroup>
-                                    </div>
-                                )}
-                                onAfterSwipe={this.remove}>
-                                <Card key={cards[0].sign}><KanjiCard data={cards[0]} /></Card>
-                            </Swipeable>
-                            {cards.length > 1 && <Card key={cards[1].sign} zIndex={-1}><KanjiCard data={cards[1]} /></Card>}
-                        </div>
+                        <>
+                            {cards.length > 1 && <Card key={cards[1].sign}><KanjiCard data={cards[1]} /></Card>}
+                            <div style={wrapperStyles}>
+                                <Swipeable
+                                    buttons={({ right, left }) => (
+                                        <div style={actionsStyles}>
+                                            <ButtonGroup fullWidth color="secondary" aria-label="Outlined primary button group">
+                                                <Button onClick={left}>いいえ</Button>
+                                                <Button onClick={right}>はい</Button>
+                                            </ButtonGroup>
+                                        </div>
+                                    )}
+                                    onAfterSwipe={this.remove}>
+                                    <Card key={cards[0].sign}><KanjiCard data={cards[0]} /></Card>
+                                </Swipeable>
+                            </div>
+                        </>
                     )}
                     {cards.length <= 1 && <Card zIndex={-2}>No more cards</Card>}
                 </div>

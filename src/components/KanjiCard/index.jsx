@@ -16,12 +16,12 @@ export default function KanjiCard(props) {
     return (
         <div className={classes.paper}>
             <FlipCard isFlipped={isFlipped}>
-                <Paper className={clsx(classes.main, classes.card)} onClick={showBack}>
+                <Paper className={clsx(classes.main, classes.card)} onDoubleClick={showBack}>
                     <Typography variant="h1">
                         {props.data.sign}
                     </Typography>
                 </Paper>
-                <Paper className={clsx(classes.other, classes.card)} onClick={showFront}>
+                <Paper className={clsx(classes.other, classes.card)} onDoubleClick={showFront}>
                     <Typography variant="h2" gutterBottom>
                         {props.data.sign}
                     </Typography>
