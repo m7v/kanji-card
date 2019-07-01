@@ -2,18 +2,21 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import kanjiList from './kanjiList.json';
-import KanjiCard from '../../components/KanjiCard';
+import { Swipe } from '../../components/Swipe';
+// import KanjiCard from '../../components/KanjiCard';
+
+const cards = Object.values(kanjiList.items);
 
 export default function App() {
   const classes = useStyles();
-
   return (
     <Grid container justify="center" className={classes.root}>
-      {Object.values(kanjiList.items).map(value => (
-        <Grid key={value.sign} item className={classes.item}>
-          <KanjiCard data={value} />
-        </Grid>
-      ))}
+      <Swipe cards={cards} />
+      {/*{cards.map(value => (*/}
+        {/*<Grid key={value.sign} item className={classes.item}>*/}
+          {/*<KanjiCard data={value} />*/}
+        {/*</Grid>*/}
+      {/*))}*/}
     </Grid>
   );
 }
@@ -21,7 +24,7 @@ export default function App() {
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.primary.main,
-    padding: '16px 0',
+    // padding: '16px 0',
     flexGrow: 1,
   },
   item: {
