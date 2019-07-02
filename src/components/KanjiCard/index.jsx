@@ -43,15 +43,13 @@ export default function KanjiCard(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        margin: theme.spacing(6, 0, 3),
-    },
     paper: {
         cursor: 'pointer',
         height: 350,
         width: 250,
     },
     card: {
+        userSelect: 'none',
         borderRadius: 10,
         padding: theme.spacing(2),
         height: '100%',

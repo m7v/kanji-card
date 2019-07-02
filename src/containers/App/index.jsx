@@ -3,32 +3,25 @@ import orderBy from 'lodash/orderBy';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import kanjiList from './kanjiList.json';
-import { Swipe } from '../../components/Swipe';
-// import KanjiCard from '../../components/KanjiCard';
+import { Stack } from '../../components/Stack';
+// import { Swipe } from '../../components/Swipe';
 
 const cards = orderBy(Object.values(kanjiList.items), (o) => o.tags[0].match(/\d/g)[0], 'desc');
 
 export default function App() {
   const classes = useStyles();
+
   return (
     <Grid container justify="center" className={classes.root}>
-      <Swipe cards={cards} />
-      {/*{cards.map(value => (*/}
-        {/*<Grid key={value.sign} item className={classes.item}>*/}
-          {/*<KanjiCard data={value} />*/}
-        {/*</Grid>*/}
-      {/*))}*/}
+      <Stack cards={cards.splice(0, 20).reverse()} />
+      {/* <Swipe cards={cards.splice(0, 20)} /> */}
     </Grid>
-  );
+  )
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: theme.palette.primary.main,
-    // padding: '16px 0',
-    flexGrow: 1,
-  },
-  item: {
-    margin: theme.spacing(3),
+    width: '100%',
+    height: '100%',
   },
 }));
