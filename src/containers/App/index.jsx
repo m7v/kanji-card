@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <Grid container justify="center" className={classes.root}>
-      <Stack cards={cards.splice(0, 20).reverse()} />
+      <Stack cards={cards.splice(0, 5).reverse()} />
       {/* <Swipe cards={cards.splice(0, 20)} /> */}
     </Grid>
   )
