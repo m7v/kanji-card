@@ -5,9 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import KanjiCard from '../../components/KanjiCard';
+import firebase from '../../libs/firebase'
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
-const to = (i) => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 100 });
+const to = (i) => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 50 });
 const from = (i) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
 // This is being used down there in the view, it interpolates rotation and scale into a css transform
 const trans = (r, s) => `perspective(1000px) rotateX(5deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
@@ -28,7 +29,8 @@ export function Stack({ cards }) {
         if (!down && trigger) {
             if (dir === 1) {
                 console.log('I know this card');
-                gone.add(index) // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+                gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+                firebase.addToReviewList(cards[index]);
             }
             if (dir === -1) {
                 console.log('Need to repeat');
@@ -72,9 +74,11 @@ export function Stack({ cards }) {
     return (
         <>
             <div className={classes.wrapper}>
-                <div className={classes.container}>
-                    <Button color='secondary' onClick={repeatCb}>再びますか</Button>
-                </div>
+                {!!cards.length &&
+                    <div className={classes.container}>
+                        <Button color='secondary' onClick={repeatCb}>再びますか</Button>
+                    </div>
+                }
                 {props.map(({ x, y, rot, scale }, i) => (
                     <animated.div className={classes.container} key={cards[i].id} style={{ transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0) rotate(${x / 25}deg)`) }}>
                         {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
@@ -99,6 +103,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
         position: 'fixed',
         overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
         height: '100%',
     },
@@ -106,12 +113,7 @@ const useStyles = makeStyles((theme) => ({
         userSelect: 'none',
         backgroundColor: 'transparent',
         position: 'absolute',
-        width: '100%',
-        height: '100%',
         willChange: 'transform',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     actions: {
         position: 'absolute',
