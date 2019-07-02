@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import KanjiCard from '../../components/KanjiCard';
 import firebase from '../../libs/firebase'
+import { Typography } from '@material-ui/core';
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = (i) => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 50 });
@@ -16,10 +17,19 @@ const trans = (r, s) => `perspective(1000px) rotateX(5deg) rotateY(${r / 10}deg)
 const gone = new Set();
 const repeat = new Set();
 
-export function Stack({ cards }) {
+export function Stack() {
     const classes = useStyles();
     const [{ circle }, setState] = React.useState({ circle: 1 });
+    const [ cards, setCards ] = React.useState([]);
+    const [ message, setMessage ] = React.useState(undefined);
     const [ props, set ] = useSprings(cards.length, i => ({ ...to(i), from: from(i) })); // Create a bunch of springs using the helpers above
+
+    React.useEffect(() => {
+        firebase.getKanjiCards().then(({ cards, message }) => {
+            setCards(cards);
+            setMessage(message);
+        });
+    }, []);
 
     // Create a gesture, we're interested in down-state, delta (current-pos - click-pos), direction and velocity
     const bind = useGesture(({ args: [index], down, delta: [xDelta], direction: [xDir], velocity }) => {
@@ -74,6 +84,11 @@ export function Stack({ cards }) {
     return (
         <>
             <div className={classes.wrapper}>
+                {!!message && 
+                    <Typography color='secondary' variant="h2" gutterBottom>
+                        休みます
+                    </Typography>
+                }
                 {!!cards.length &&
                     <div className={classes.container}>
                         <Button color='secondary' onClick={repeatCb}>再びますか</Button>
@@ -88,12 +103,14 @@ export function Stack({ cards }) {
                     </animated.div>
                 ))}
             </div>
-            <div className={classes.actions}>
-                <ButtonGroup fullWidth color="secondary" aria-label="Outlined primary button group">
-                    <Button onClick={() => console.log('left')}>いいえ</Button>
-                    <Button onClick={() => console.log('right')}>はい</Button>
-                </ButtonGroup>
-            </div>
+            {!!cards.length &&
+                <div className={classes.actions}>
+                    <ButtonGroup fullWidth color="secondary" aria-label="Outlined primary button group">
+                        <Button onClick={() => console.log('left')}>いいえ</Button>
+                        <Button onClick={() => console.log('right')}>はい</Button>
+                    </ButtonGroup>
+                </div>
+            }
         </>
     )
 };
