@@ -3,22 +3,13 @@ import 'firebase/auth';
 import 'firebase/database';
 import orderBy from 'lodash/orderBy';
 import shuffle from 'lodash/shuffle';
+import { config } from './config';
 
 const production = !!localStorage.getItem('私の信仰');
 
 const DAY = 1000 * 60 * 60 * 24;
 const IN_LEARN = 'inLearning';
 const TO_REVIEW = 'toReview';
-
-const config = {
-	apiKey: 'AIzaSyCxWPw-_hj73EsObm7pcbU7Td2CSFtubLw',
-	authDomain: 'kanji-anki.firebaseapp.com',
-	databaseURL: 'https://kanji-anki.firebaseio.com',
-	projectId: 'kanji-anki',
-	storageBucket: 'kanji-anki.appspot.com',
-	messagingSenderId: '15839805144',
-	appId: '1:15839805144:web:106f949c5bcb48bd',
-};
 
 const getDate = () => {
 	var date = new Date();
