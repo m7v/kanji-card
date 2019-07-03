@@ -84,9 +84,9 @@ export function Stack() {
     return (
         <>
             <div className={classes.wrapper}>
-                {!!message && 
+                {!!message &&
                     <Typography color='secondary' variant="h2" gutterBottom>
-                        休みます
+                        休みましょう
                     </Typography>
                 }
                 {!!cards.length &&
