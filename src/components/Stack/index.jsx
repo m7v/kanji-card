@@ -40,11 +40,12 @@ export function Stack() {
             if (dir === 1) {
                 console.log('I know this card');
                 gone.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
-                firebase.addToReviewList(cards[index]);
+                firebase.upCardStatus(cards[index]);
             }
             if (dir === -1) {
                 console.log('Need to repeat');
-                repeat.add(index) // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+                repeat.add(index); // If button/finger's up and trigger velocity is reached, we flag the card ready to fly out
+                firebase.lowCardStatus(cards[index]);
             }
         }
 

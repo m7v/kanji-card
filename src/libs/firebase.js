@@ -126,12 +126,28 @@ class Firebase {
 		});
 	}
 
-	addToReviewList(card) {
+	lowCardStatus(card) {
 		if (!production) {
 			return;
 		}
 
+		if (card.status === TO_REVIEW) {
+			this.addToReviewList(card);
+			return;
+		}
+
 		if (card.status === IN_LEARN) {
+			this.addToNewList(card);
+			return;
+		}
+	}
+
+	upCardStatus(card) {
+		if (!production) {
+			return;
+		}
+
+		if (card.status === IN_LEARN || card.status === TO_REVIEW) {
 			this.addToKnowList(card);
 			return;
 		}
@@ -140,8 +156,8 @@ class Firebase {
 			const count = data.val();
 			this.db.ref('activity/count').set(count + 1);
 		});
-		this.db.ref(`knowList/${card.id}`).set(null);
-		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDate(), day: DAY, status: IN_LEARN, });
+
+		this.addToReviewList(card);
 	}
 
 	addToKnowList(card) {
@@ -150,6 +166,25 @@ class Firebase {
 		}
 
 		this.db.ref(`knowList/${card.id}`).set({ ...card, day: card.day * 2, status: TO_REVIEW, });
+		this.db.ref(`reviewList/${card.id}`).set(null);
+	}
+
+
+	addToReviewList(card) {
+		if (!production) {
+			return;
+		}
+
+		this.db.ref(`knowList/${card.id}`).set(null);
+		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDate(), day: DAY, status: IN_LEARN, });
+	}
+
+	addToNewList(card) {
+		if (!production) {
+			return;
+		}
+
+		this.db.ref(`knowList/${card.id}`).set(null);
 		this.db.ref(`reviewList/${card.id}`).set(null);
 	}
 }
