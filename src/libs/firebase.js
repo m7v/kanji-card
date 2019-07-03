@@ -4,7 +4,7 @@ import 'firebase/database';
 import orderBy from 'lodash/orderBy';
 import shuffle from 'lodash/shuffle';
 
-const production = true;
+const production = !!localStorage.getItem('私の信仰');
 
 const DAY = 1000 * 60 * 60 * 24;
 const IN_LEARN = 'inLearning';
@@ -126,7 +126,7 @@ class Firebase {
 						message: 'You need to rest'
 					});
 				}
-					
+
 				return resolve({
 					cards: shuffle(cards),
 					message: undefined,
