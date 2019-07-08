@@ -17,6 +17,9 @@ export default function KanjiCard(props) {
         <div className={classes.paper}>
             <FlipCard isFlipped={isFlipped}>
                 <Paper className={clsx(classes.main, classes.card)} onDoubleClick={showBack}>
+                    <div className={clsx(classes.tags)}>
+                        {props.data.tags.map((attr, i) => <div key={`${i}${attr}`}>{attr}</div>)}
+                    </div>
                     <Typography variant="h1">
                         {props.data.sign}
                     </Typography>
@@ -65,5 +68,11 @@ const useStyles = makeStyles(theme => ({
     },
     other: {
         color: theme.palette.text.secondary,
+    },
+    tags: {
+        position: 'absolute',
+        top: '10px',
+        right: '10px',
+        color: '#ccc',
     }
 }));

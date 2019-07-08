@@ -67,17 +67,11 @@ export function Stack() {
         console.log('Next round!');
         setTimeout(() => {
             setState({ circle: circle + 1 });
-
-            var a = [];
-            repeat.forEach((i) => a.push(i));
+            let list = [];
+            repeat.forEach((i) => list.push(i));
             gone.clear();
             repeat.clear();
-            set((i) => {
-                if (a.indexOf(i) !== -1) {
-                   return to(i);
-                }
-                return from(i);
-            });
+            set((i) => list.indexOf(i) !== -1 ? to(i) : from(i));
         }, 600);
     };
 
