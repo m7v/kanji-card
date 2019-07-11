@@ -175,10 +175,12 @@ class Firebase {
 			return;
 		}
 
-		this.db.ref('/activity/count').once('value', (data) => {
-			const count = data.val();
-			this.db.ref('activity/count').set(count + 1);
-		});
+		if (!card.status) {
+			this.db.ref('/activity/count').once('value', (data) => {
+				const count = data.val();
+				this.db.ref('activity/count').set(count + 1);
+			});
+		}
 
 		this.addToReviewList(card);
 	}
@@ -189,18 +191,19 @@ class Firebase {
 		}
 
 		// If kanji learning less then 4 hours we should send it to ReviewList.
-		if (card.day <= HOUR * 4) {
+		if (card.status !== TO_REVIEW && card.day <= HOUR * 4) {
 			this.addToReviewList(card);
 			return;
 		}
 
-		const intervalRepeating = card.day * 2 >= MONTH ? card.day + MONTH : card.day * 2;
+		const intervalRepeating = card.day + card.day * 2 >= MONTH
+			? card.day + MONTH
+			: card.day + card.day * 2;
 		const date = card.status === IN_LEARN ? getDate() : card.date;
 
 		this.db.ref(`knowList/${card.id}`).set({ ...card, date, day: intervalRepeating, status: TO_REVIEW, });
 		this.db.ref(`reviewList/${card.id}`).set(null);
 	}
-
 
 	addToReviewList(card) {
 		if (!production) {
@@ -211,8 +214,10 @@ class Firebase {
 			? FIFTEEN_MINUTES
 			: card.day >= HOUR * 4
 				? DAY
-				: card.day * 2;
-		const date = card.date ? card.date : getDateWithHoursAndMinutes();
+				: card.day + card.day * 2;
+		const date = card.date
+			? card.date
+			: getDateWithHoursAndMinutes();
 
 		this.db.ref(`knowList/${card.id}`).set(null);
 		this.db.ref(`reviewList/${card.id}`).set({ ...card, date, day: intervalRepeating, status: IN_LEARN, });
