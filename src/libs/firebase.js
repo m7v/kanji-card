@@ -7,7 +7,9 @@ import { config } from './config';
 
 const production = !!localStorage.getItem('私の信仰');
 
-const DAY = 1000 * 60 * 60 * 24;
+const FIFTEEN_MINUTES = 1000 * 60 * 15;
+const HOUR = 1000 * FIFTEEN_MINUTES * 4;
+const DAY = 1000 * 60 * HOUR * 24;
 const MONTH = DAY * 30;
 const IN_LEARN = 'inLearning';
 const TO_REVIEW = 'toReview';
@@ -167,6 +169,13 @@ class Firebase {
 		if (!production) {
 			return;
 		}
+
+		// If kanji learning less then 4 hours we should send it to ReviewList.
+		if (card.day <= HOUR * 4) {
+			this.addToReviewList(card);
+			return;
+		}
+
 		const intervalRepeating = card.day * 2 >= MONTH ? card.day + MONTH : card.day * 2;
 		this.db.ref(`knowList/${card.id}`).set({ ...card, day: intervalRepeating, status: TO_REVIEW, });
 		this.db.ref(`reviewList/${card.id}`).set(null);
@@ -178,8 +187,14 @@ class Firebase {
 			return;
 		}
 
+		const intervalRepeating = !card.day
+			? FIFTEEN_MINUTES
+			: card.day >= HOUR * 4
+				? DAY
+				: card.day * 2;
+
 		this.db.ref(`knowList/${card.id}`).set(null);
-		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDate(), day: DAY, status: IN_LEARN, });
+		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDate(), day: intervalRepeating, status: IN_LEARN, });
 	}
 
 	addToNewList(card) {
