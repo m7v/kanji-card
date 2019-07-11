@@ -8,8 +8,8 @@ import { config } from './config';
 const production = !!localStorage.getItem('私の信仰');
 
 const FIFTEEN_MINUTES = 1000 * 60 * 15;
-const HOUR = 1000 * FIFTEEN_MINUTES * 4;
-const DAY = 1000 * 60 * HOUR * 24;
+const HOUR = FIFTEEN_MINUTES * 4;
+const DAY = HOUR * 24;
 const MONTH = DAY * 30;
 const IN_LEARN = 'inLearning';
 const TO_REVIEW = 'toReview';
