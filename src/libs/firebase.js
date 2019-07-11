@@ -19,6 +19,11 @@ const getDate = () => {
 	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`)).getTime();
 };
 
+const getDateWithHours = () => {
+	const date = new Date();
+	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`)).getTime();
+};
+
 class Firebase {
 	constructor() {
 		app.initializeApp(config);
@@ -177,7 +182,9 @@ class Firebase {
 		}
 
 		const intervalRepeating = card.day * 2 >= MONTH ? card.day + MONTH : card.day * 2;
-		this.db.ref(`knowList/${card.id}`).set({ ...card, day: intervalRepeating, status: TO_REVIEW, });
+		const date = card.status === IN_LEARN ? getDate() : card.date;
+
+		this.db.ref(`knowList/${card.id}`).set({ ...card, date, day: intervalRepeating, status: TO_REVIEW, });
 		this.db.ref(`reviewList/${card.id}`).set(null);
 	}
 
@@ -194,7 +201,7 @@ class Firebase {
 				: card.day * 2;
 
 		this.db.ref(`knowList/${card.id}`).set(null);
-		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDate(), day: intervalRepeating, status: IN_LEARN, });
+		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDateWithHours(), day: intervalRepeating, status: IN_LEARN, });
 	}
 
 	addToNewList(card) {
