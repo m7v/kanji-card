@@ -5,12 +5,14 @@ const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 const page = 1;
 const pageSize = 20;
-const levels = ['jlpt-n5', 'jlpt-n4', 'jlpt-n3'];
+const levels = ['jlpt-n5', 'jlpt-n4', 'jlpt-n3', 'jlpt-n2', 'jlpt-n1'];
 
 const levelMapper = {
     'jlpt-n5': 'n5',
     'jlpt-n4': 'n4',
     'jlpt-n3': 'n3',
+    'jlpt-n2': 'n2',
+    'jlpt-n1': 'n1',
 };
 
 const buildPageUrl = (l, p) => `https://jisho.org/search/%23${l}%20%23kanji?page=${p}`;
@@ -95,8 +97,8 @@ const extractKanjiByLevel = (level) => {
 }
 
 const promises = levels.map(level => extractKanjiByLevel(level));
-Promise.all(promises).then(([level1, level2, level3]) => {
-    const items = [ ...level1.kanjiList, ...level2.kanjiList, ...level3.kanjiList ];
+Promise.all(promises).then((allLevels) => {
+    const items = allLevels.reduce((arr, level) => arr.concat(level.kanjiList), []);
     const normalizedItems = items.reduce((acc, item) => {
         const itemId = item.sign.charCodeAt();
         acc[itemId] = {

@@ -12,8 +12,8 @@ const IN_LEARN = 'inLearning';
 const TO_REVIEW = 'toReview';
 
 const getDate = () => {
-	var date = new Date();
-	return (new Date(`${date.getMonth() + 1}.${date.getDay()}.${date.getFullYear()}`)).getTime();
+	const date = new Date();
+	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`)).getTime();
 };
 
 class Firebase {
@@ -73,7 +73,9 @@ class Firebase {
 				const cardInReviewIds = Object.keys(state.reviewList || {});
 				const cardInLearned = Object.values(state.knowList || {});
 				const cardInLearnedIds = Object.keys(state.knowList || {});
-				const allCards = Object.values(state.items);
+				const learnedLevels = state.config.levels || [];
+				const allCards = Object.values(state.items)
+					.filter((item) => learnedLevels.includes(item.tags[0]));
 
 				if (!state.activity.date) {
 					this.db.ref('activity/date').set(currentDate);
