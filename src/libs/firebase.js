@@ -21,6 +21,11 @@ const getDate = () => {
 
 const getDateWithHours = () => {
 	const date = new Date();
+	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()} ${date.getHours()}:00`)).getTime();
+};
+
+const getDateWithHoursAndMinutes = () => {
+	const date = new Date();
 	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`)).getTime();
 };
 
@@ -74,9 +79,9 @@ class Firebase {
 	getKanjiCards() {
 		return new Promise((resolve) => {
 			this.db.ref('/').once('value', (data) => {
-				let isReseted = false;
+				let isReset = false;
 				const state = data.val();
-				const currentDate = getDateWithHours();
+				const currentDateWithMinutes = getDateWithHoursAndMinutes();
 				const cardInReview = Object.values(state.reviewList || {});
 				const cardInReviewIds = Object.keys(state.reviewList || {});
 				const cardInLearned = Object.values(state.knowList || {});
@@ -86,18 +91,26 @@ class Firebase {
 					.filter((item) => learnedLevels.includes(item.tags[0]));
 
 				if (!state.activity.date) {
-					this.db.ref('activity/date').set(currentDate);
+					this.db.ref('activity/date').set(currentDateWithMinutes);
 				}
-				if (state.activity.date < currentDate) {
-					this.db.ref('activity/date').set(currentDate);
-					this.db.ref('activity/count').set(0);
-					state.activity.date = currentDate;
-					state.activity.count = 0;
-					isReseted = true;
+				if (state.activity.date < currentDateWithMinutes) {
+					this.db.ref('activity/date').set(currentDateWithMinutes);
+					state.activity.date = currentDateWithMinutes;
+
+					const savedDayDate = (new Date(state.activity.date)).getDate();
+					const nowDayDate = (new Date(currentDateWithMinutes)).getDate();
+
+					const countForSaving = savedDayDate === nowDayDate ? state.activity.count : 0;
+					this.db.ref('activity/count').set(countForSaving);
+					state.activity.count = countForSaving;
+					isReset = countForSaving === 0;
 				}
 				const withoutNew = state.activity.count >= state.config.maxNew;
 
-				if (!isReseted && state.activity.date === currentDate) {
+				const savedDay = (new Date(state.activity.date)).getDate();
+				const nowDay = (new Date(currentDateWithMinutes)).getDate();
+
+				if (!isReset && savedDay === nowDay) {
 					if (withoutNew && !cardInReviewIds.length) {
 						return resolve({
 							cards: [],
@@ -116,7 +129,7 @@ class Firebase {
 					).splice(0, state.config.maxNew - state.activity.count);
 
 				const reviewCards = [...cardInReview, ...cardInLearned]
-					.filter((card) => card.date + card.day <= currentDate)
+					.filter((card) => card.date + card.day <= currentDateWithMinutes)
 					.splice(0, state.config.maxReview);
 
 				const cards = [...newCards, ...reviewCards];
@@ -199,7 +212,7 @@ class Firebase {
 			: card.day >= HOUR * 4
 				? DAY
 				: card.day * 2;
-		const date = card.date ? card.date : getDateWithHours();
+		const date = card.date ? card.date : getDateWithHoursAndMinutes();
 
 		this.db.ref(`knowList/${card.id}`).set(null);
 		this.db.ref(`reviewList/${card.id}`).set({ ...card, date, day: intervalRepeating, status: IN_LEARN, });
