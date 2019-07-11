@@ -76,7 +76,7 @@ class Firebase {
 			this.db.ref('/').once('value', (data) => {
 				let isReseted = false;
 				const state = data.val();
-				const currentDate = getDate();
+				const currentDate = getDateWithHours();
 				const cardInReview = Object.values(state.reviewList || {});
 				const cardInReviewIds = Object.keys(state.reviewList || {});
 				const cardInLearned = Object.values(state.knowList || {});
