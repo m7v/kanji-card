@@ -199,9 +199,10 @@ class Firebase {
 			: card.day >= HOUR * 4
 				? DAY
 				: card.day * 2;
+		const date = card.date ? card.date : getDateWithHours();
 
 		this.db.ref(`knowList/${card.id}`).set(null);
-		this.db.ref(`reviewList/${card.id}`).set({ ...card, date: getDateWithHours(), day: intervalRepeating, status: IN_LEARN, });
+		this.db.ref(`reviewList/${card.id}`).set({ ...card, date, day: intervalRepeating, status: IN_LEARN, });
 	}
 
 	addToNewList(card) {
