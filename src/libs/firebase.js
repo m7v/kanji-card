@@ -167,7 +167,7 @@ class Firebase {
 		if (!production) {
 			return;
 		}
-		const intervalRepeating = card.day * 2 >= MONTH ? MONTH : card.day * 2;
+		const intervalRepeating = card.day * 2 >= MONTH ? card.day + MONTH : card.day * 2;
 		this.db.ref(`knowList/${card.id}`).set({ ...card, day: intervalRepeating, status: TO_REVIEW, });
 		this.db.ref(`reviewList/${card.id}`).set(null);
 	}
