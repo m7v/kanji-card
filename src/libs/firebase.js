@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import orderBy from 'lodash/orderBy';
 import shuffle from 'lodash/shuffle';
+import compact from 'lodash/compact';
 import { config } from './config';
 
 const production = !!localStorage.getItem('私の信仰');
@@ -87,6 +88,7 @@ class Firebase {
 				const cardInLearned = Object.values(state.knowList || {});
 				const cardInLearnedIds = Object.keys(state.knowList || {});
 				const learnedLevels = state.config.levels || [];
+				const preferredOrder = state.config.prefererOrder || [];
 				const allCards = Object.values(state.items)
 					.filter((item) => learnedLevels.includes(item.tags[0]));
 
@@ -126,13 +128,22 @@ class Firebase {
 						allCards.filter((item) => !removeIds.includes(item.id)),
 						(o) => o.tags[0].match(/\d/g)[0],
 						'desc'
-					).splice(0, state.config.maxNew - state.activity.count);
+					);
+
+				let newCardPool = !!preferredOrder.length
+					? compact(
+						preferredOrder.map((i) => newCards.find((o) => o.id === i))
+					)
+					: newCards;
 
 				const reviewCards = [...cardInReview, ...cardInLearned]
 					.filter((card) => card.date + card.day <= currentDateWithMinutes)
 					.splice(0, state.config.maxReview);
 
-				const cards = [...newCards, ...reviewCards];
+				const cards = [
+					...newCardPool.splice(0, state.config.maxNew - state.activity.count),
+					...reviewCards
+				];
 
 				if (!cards.length) {
 					return resolve({
