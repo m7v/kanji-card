@@ -80,7 +80,7 @@ export function Stack() {
         <>
             <div className={classes.wrapper}>
                 {!!message &&
-                    <Typography color='secondary' variant="h2" gutterBottom>
+                    <Typography color='secondary' variant="h3" gutterBottom>
                         休みましょう
                     </Typography>
                 }

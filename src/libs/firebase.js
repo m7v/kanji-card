@@ -20,11 +20,6 @@ const getDate = () => {
 	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`)).getTime();
 };
 
-const getDateWithHours = () => {
-	const date = new Date();
-	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()} ${date.getHours()}:00`)).getTime();
-};
-
 const getDateWithHoursAndMinutes = () => {
 	const date = new Date();
 	return (new Date(`${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`)).getTime();
