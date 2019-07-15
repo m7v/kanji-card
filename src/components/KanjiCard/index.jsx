@@ -16,7 +16,7 @@ export default function KanjiCard(props) {
     return (
         <div className={classes.paper}>
             <FlipCard isFlipped={isFlipped}>
-                <Paper className={clsx(classes.main, classes.card)} onDoubleClick={showBack}>
+                <Paper className={clsx(classes.main, classes.card)} onClick={showBack}>
                     <div className={clsx(classes.tags)}>
                         {props.data.tags.map((attr, i) => <div key={`${i}${attr}`}>{attr}</div>)}
                     </div>
@@ -24,7 +24,7 @@ export default function KanjiCard(props) {
                         {props.data.sign}
                     </Typography>
                 </Paper>
-                <Paper className={clsx(classes.other, classes.card)} onDoubleClick={showFront}>
+                <Paper className={clsx(classes.other, classes.card)} onClick={showFront}>
                     <Typography variant="h2" gutterBottom>
                         {props.data.sign}
                     </Typography>
