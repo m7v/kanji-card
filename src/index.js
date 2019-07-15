@@ -19,6 +19,24 @@ const theme = createMuiTheme({
     },
     typography: {
         useNextVariants: true,
+        fontFamily: [
+            "Source Han Sans",
+            "源ノ角ゴシック",
+            "Hiragino Sans",
+            "HiraKakuProN-W3",
+            "Hiragino Kaku Gothic ProN W3",
+            "Hiragino Kaku Gothic ProN",
+            "ヒラギノ角ゴ ProN W3",
+            "Noto Sans",
+            "Noto Sans CJK JP",
+            "メイリオ",
+            "游ゴシック",
+            "ＭＳ Ｐゴシック",
+            "MS PGothic",
+            "ＭＳ ゴシック",
+            "MS Gothic",
+            'sans-serif',
+        ].join(','),
     },
 });
 
