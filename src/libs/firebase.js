@@ -87,25 +87,24 @@ class Firebase {
 				const allCards = Object.values(state.items)
 					.filter((item) => learnedLevels.includes(item.tags[0]));
 
+				const savedDay = (new Date(state.activity.date)).getDate();
+				const nowDay = (new Date(currentDateWithMinutes)).getDate();
+
 				if (!state.activity.date) {
 					this.db.ref('activity/date').set(currentDateWithMinutes);
 				}
+
 				if (state.activity.date < currentDateWithMinutes) {
-					this.db.ref('activity/date').set(currentDateWithMinutes);
-					state.activity.date = currentDateWithMinutes;
+					const dateForSaving = savedDay === nowDay ? state.activity.date : currentDateWithMinutes;
+					this.db.ref('activity/date').set(dateForSaving);
+					state.activity.date = dateForSaving;
 
-					const savedDayDate = (new Date(state.activity.date)).getDate();
-					const nowDayDate = (new Date(currentDateWithMinutes)).getDate();
-
-					const countForSaving = savedDayDate === nowDayDate ? state.activity.count : 0;
+					const countForSaving = savedDay === nowDay ? state.activity.count : 0;
 					this.db.ref('activity/count').set(countForSaving);
 					state.activity.count = countForSaving;
 					isReset = countForSaving === 0;
 				}
 				const withoutNew = state.activity.count >= state.config.maxNew;
-
-				const savedDay = (new Date(state.activity.date)).getDate();
-				const nowDay = (new Date(currentDateWithMinutes)).getDate();
 
 				if (!isReset && savedDay === nowDay) {
 					if (withoutNew && !cardInReviewIds.length) {
