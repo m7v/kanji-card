@@ -234,7 +234,12 @@ class Firebase {
 		}
 
 		this.db.ref(`knowList/${card.id}`).set(null);
-		this.db.ref(`reviewList/${card.id}`).set(null);
+		this.db.ref(`reviewList/${card.id}`).set({
+			...card,
+			date: getDateWithHoursAndMinutes(),
+			day: FIFTEEN_MINUTES,
+			status: IN_LEARN
+		});
 	}
 }
 
